@@ -41,7 +41,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/dnglx",
+            "outputPath": "docker/dist/apps/dnglx",
             "index": "apps/dnglx/src/index.html",
             "main": "apps/dnglx/src/main.ts",
             "polyfills": "apps/dnglx/src/polyfills.ts",
@@ -158,7 +158,7 @@
           "builder": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/api",
+            "outputPath": "docker/dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
             "assets": ["apps/api/src/assets"]
