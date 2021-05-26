@@ -12,7 +12,7 @@ docker pull bitnami/nginx:1.19
 echo "Starting and building..."
 
 # 1. Containerize and start dist server
-docker build --name nginxngx -t html-nginxngx-image:v1 .
+docker build -t html-nginxngx-image:v1 .
 docker run -d -p 80:80 html-nginxngx-image:v1
 
 # 2. Set up couch-pot-ato
@@ -31,7 +31,7 @@ docker run -d --name couch-pot-ato \
 
 # 3. Set up postgre-space-time
 docker run -d --name pg-space-time \
-  -p 5432:5432 \
+  -p 5532:5432 \
   -e POSTGRES_DB=pgst \
   -e POSTGRES_USER=pgst \
   -e POSTGRES_PASSWORD=password \
