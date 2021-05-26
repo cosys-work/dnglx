@@ -12,9 +12,17 @@
   "npmScope": "cosys-work",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "ZDdlYTExZGYtYTAxMi00ZTI1LTgzOWQtYTEyNjM2ODc0ZTQ1fHJlYWQtd3JpdGU=",
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true
       }
     }
   },
@@ -24,7 +32,9 @@
     },
     "dnglx-e2e": {
       "tags": [],
-      "implicitDependencies": ["dnglx"]
+      "implicitDependencies": [
+        "dnglx"
+      ]
     },
     "api": {
       "tags": []
