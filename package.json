@@ -25,6 +25,7 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
+    "compodoc": "npx compodoc -p apps/dnglx/tsconfig.app.json",
     "help": "nx help"
   },
   "private": true,
@@ -46,6 +47,7 @@
     "@nrwl/angular": "12.3.4",
     "@rinminase/ng-charts": "^4.0.1",
     "@tailwindcss/aspect-ratio": "^0.2.1",
+    "fastify-swagger": "^4.7.0",
     "reflect-metadata": "^0.1.13",
     "rxdb": "^9.18.0",
     "rxjs": "~6.6.0",
@@ -61,6 +63,7 @@
     "@angular/cli": "12.0.0",
     "@angular/compiler-cli": "12.0.0",
     "@angular/language-service": "12.0.0",
+    "@compodoc/compodoc": "^1.1.11",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@nrwl/cli": "12.3.4",
