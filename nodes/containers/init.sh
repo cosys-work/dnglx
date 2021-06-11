@@ -1,65 +1,48 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Utility to stop and remove if existing
-stop_remove_safe() {
-  OLD="$(docker ps --all --quiet --filter=name="$1")"
-  if [ -n "$OLD" ]; then
-    echo "Removing existing container: $1 ..."
-    docker stop "$OLD" && docker rm "$OLD"
-  fi
-}
-
-echo "#0 Get core base's required images nginx-alpine and bitnami-couchdb"
-# 1. [Decorated] For Angular Federated Modules, usually with Svelte/Plain TypeScript/Rescript
-docker pull nginx:1.21-alpine
-# 2. For UI component driven UIX-API, guaranteed to be the way the UI needs the API responses to be
-docker pull bitnami/couchdb:3.1.1
+source env-utils.sh
+# To enable pulling images before running use one of the two
+# bash env-utils.sh pull-aot
+# pull_aot
 
 echo "#1 Building and starting core base..."
 
 NGX_FED_MODS="dnglx"
 echo "#1.1. Containerize and start nginxngx dist server: $NGX_FED_MODS"
-stop_remove_safe "$NGX_FED_MODS"
-docker build -t nginxngx-image:v1 .
-docker run -d --name "$NGX_FED_MODS" -p 80:80 nginxngx-image:v1
+safe_stop_remove "$NGX_FED_MODS"
+docker build -f Ngingx.Dockerfile .
+docker run -d --name "$NGX_FED_MODS" -p "$DNGLX_PORT":80 nginxngx-image:"$DNGLX_VRSN"
+echo "#A The $NGX_FED_MODS container has been built and started."
 
 COUCH_ERL="couch-pot-ato"
 echo "#1.2. Set up couch-pot-ato server: $COUCH_ERL"
-stop_remove_safe "$COUCH_ERL"
+safe_stop_remove "$COUCH_ERL"
 docker run -d --name "$COUCH_ERL" \
-  -p 5984:5984 \
+  -p "$COUCHDB_PORT":5984 \
   -e COUCHDB_PASSWORD=password \
   -v couchdb:/bitnami/couchdb \
-  bitnami/couchdb:3.1.1
-
+  bitnami/couchdb:"$COUCHDB_VRSN"
+echo "#B The $COUCH_ERL container has been started."
 # COUCHDB_USER: The username of the administrator user when authentication is enabled. Default: admin
 # COUCHDB_PASSWORD: The password to use for login with the admin user set in the COUCHDB_USER environment variable. Default: couchdb
-# COUCHDB_NODENAME: A server alias for clusteecho "ing support. Default: couchdb@127.0.0.1"
+# COUCHDB_NODENAME: A server alias for clustering support. Default: couchdb@127.0.0.1"
 # COUCHDB_PORT_NUMBER: Standard port for all HTTP API requests. Default: 5984
 # COUCHDB_CLUSTER_PORT_NUMBER: Port for cluster communication. Default: 9100
 # COUCHDB_BIND_ADDRESS: Address binding for the standard port. Default: 0.0.0.0
 
 echo "#2. Get opt core's required images timescaledb-postgis, bitnami-keycloak and bitnami-nginx"
 
-# Get opt-core base
-# 3. [Linked 0] For Relational, Time series and GIS datasets
-docker pull timescale/timescaledb-postgis:latest-pg12
-# 4. [Linked 0] For OIDC/JWT and complex user roles, authorizations etc
-docker pull bitnami/keycloak:13
-# 5. [Decorated, Linked 0] Mini-deb for prox-e-g APIs (Ledgers, Dashboards, MACERs)
-docker pull bitnami/nginx:1.19
-
 echo "#3 Building and starting opt core..."
 
 echo "#3.1 Set up postgre-space-time"
 
-KEY_NET="key-net"
+export KEY_NET="key-net"
 
-PG_SPACE_TIME="pg-space-time"
-docker network create "$KEY_NET" || true
-stop_remove_safe "$PG_SPACE_TIME"
+export PG_SPACE_TIME="pg-space-time"
+docker network create "$KEY_NET" 2> /dev/null
+safe_stop_remove "$PG_SPACE_TIME"
 docker run -d --name "$PG_SPACE_TIME" \
-  -p 5432:5432 \
+  -p "$POSTGRES_PORT":5432 \
   --net "$KEY_NET" \
   -e POSTGRES_USER=pgst \
   -e POSTGRES_DB=pgst \
@@ -68,19 +51,21 @@ docker run -d --name "$PG_SPACE_TIME" \
   -e TIMESCALEDB_TELEMETRY=off \
   -e PGDATA=/var/lib/postgresql/data/pgdata \
   -v pgdata:/var/lib/postgresql/data \
-  timescale/timescaledb-postgis:latest-pg12
+  timescale/timescaledb-postgis:"$TIMESCALE_POSTGIS_VRSN"
+echo "#C The $PG_SPACE_TIME container has been started."
 
 KEY_POT="key-pot"
 echo "#3.2 Set up $KEY_POT with $PG_SPACE_TIME"
-stop_remove_safe "$KEY_POT"
+safe_stop_remove "$KEY_POT"
 docker run -d --name "$KEY_POT" \
   --net "$KEY_NET" \
-  -p 8080:8080 \
+  -p "$KEYCLOAK_PORT":8080 \
   -e KEYCLOAK_DATABASE_HOST="$PG_SPACE_TIME" \
   -e KEYCLOAK_DATABASE_NAME=pgst \
   -e KEYCLOAK_DATABASE_USER=pgst \
   -e KEYCLOAK_DATABASE_PASSWORD=password \
-  bitnami/keycloak:13
+  bitnami/keycloak:"$KEYCLOAK_VRSN"
+echo "#D The $KEY_POT container has been started."
 #  -e JDBC_PARAMS="connectTimeout=30000" \
 
 # Creates administrator and manager user on boot.
