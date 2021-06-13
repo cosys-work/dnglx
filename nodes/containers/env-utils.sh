@@ -18,11 +18,12 @@ export TIMESCALE_POSTGIS_VRSN="latest-pg12"
 export KEYCLOAK_PORT=8080
 export KEYCLOAK_VRSN="13"
 
-#Dev
+#Dev A
 export PORTAINER_PORT=9090
 export PORTAINER_API_PORT=8000
 export PORTAINER_VRSN="latest"
 
+#Dev B
 export SONARQUBE_PORT=9000
 export SONARQUBE_API_PORT=9092
 export SONARQUBE_VRSN="lts-community"
