@@ -9,6 +9,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import {FastifyAdapter, NestFastifyApplication} from "@nestjs/platform-fastify";
 
+import compression from 'fastify-compress';
+
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -20,6 +22,7 @@ async function bootstrap() {
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
   });
+  await app.register(compression, { encodings: ['gzip', 'deflate'] });
 }
 
 bootstrap();
