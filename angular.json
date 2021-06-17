@@ -32,6 +32,69 @@
     }
   },
   "projects": {
+    "api": {
+      "root": "apps/api",
+      "sourceRoot": "apps/api/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "nodes/containers/dist/apps/api",
+            "main": "apps/api/src/main.ts",
+            "tsConfig": "apps/api/tsconfig.app.json",
+            "assets": ["apps/api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/api/src/environments/environment.ts",
+                  "with": "apps/api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/api/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/api"],
+          "options": {
+            "jestConfig": "apps/api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-interfaces": {
+      "root": "libs/api-interfaces",
+      "sourceRoot": "libs/api-interfaces/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api-interfaces/**/*.ts"]
+          }
+        }
+      }
+    },
     "dnglx": {
       "projectType": "application",
       "root": "apps/dnglx",
@@ -47,7 +110,10 @@
             "polyfills": "apps/dnglx/src/polyfills.ts",
             "tsConfig": "apps/dnglx/tsconfig.app.json",
             "assets": ["apps/dnglx/src/favicon.ico", "apps/dnglx/src/assets"],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css", "apps/dnglx/src/styles.css"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "apps/dnglx/src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -149,68 +215,43 @@
         }
       }
     },
-    "api": {
-      "root": "apps/api",
-      "sourceRoot": "apps/api/src",
-      "projectType": "application",
+    "prox-docs": {
+      "root": "libs/prox-docs",
+      "sourceRoot": "libs/prox-docs/src",
+      "projectType": "library",
       "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+        "generate-sources": {
+          "builder": "@trumbitta/nx-plugin-openapi:generate-api-lib-sources",
           "options": {
-            "outputPath": "nodes/containers/dist/apps/api",
-            "main": "apps/api/src/main.ts",
-            "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/api/src/environments/environment.ts",
-                  "with": "apps/api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "api:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/api/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/api"],
-          "options": {
-            "jestConfig": "apps/api/jest.config.js",
-            "passWithNoTests": true
+            "generator": "html",
+            "sourceSpecPathOrUrl": "libs/prox-eg/src/prox-eg.openapi.yml",
+            "additionalProperties": "",
+            "globalProperties": ""
           }
         }
       }
     },
-    "api-interfaces": {
-      "root": "libs/api-interfaces",
-      "sourceRoot": "libs/api-interfaces/src",
+    "prox-e": {
+      "root": "libs/prox-e",
+      "sourceRoot": "libs/prox-e/src",
       "projectType": "library",
       "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
+        "generate-sources": {
+          "builder": "@trumbitta/nx-plugin-openapi:generate-api-lib-sources",
           "options": {
-            "lintFilePatterns": ["libs/api-interfaces/**/*.ts"]
+            "generator": "typescript-rxjs",
+            "sourceSpecPathOrUrl": "libs/prox-eg/src/prox-eg.openapi.yml",
+            "additionalProperties": "",
+            "globalProperties": ""
           }
         }
       }
+    },
+    "prox-eg": {
+      "root": "libs/prox-eg",
+      "sourceRoot": "libs/prox-eg/src",
+      "projectType": "library",
+      "architect": {}
     }
   }
 }

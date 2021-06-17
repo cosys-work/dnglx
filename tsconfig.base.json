@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cosys-work/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@cosys-work/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@cosys-work/prox-docs": ["libs/prox-docs/src/index.ts"],
+      "@cosys-work/prox-e": ["libs/prox-e/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
