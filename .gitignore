@@ -40,3 +40,5 @@ Thumbs.db
 /venv/
 /nodes/vm/.vagrant/
 /.scannerwork/
+/documentation/elven/_site/
+/documentation/elven/build/
