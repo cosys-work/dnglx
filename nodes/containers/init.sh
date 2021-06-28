@@ -54,8 +54,13 @@ docker run -d --name "$PG_SPACE_TIME" \
   timescale/timescaledb-postgis:"$TIMESCALE_POSTGIS_VRSN"
 echo "#C The $PG_SPACE_TIME container has been started."
 
+ROCKS="rocks"
+echo "#3.2 Set up $ROCKS"
+safe_stop_remove "$ROCKS"
+docker run --name "$ROCKS" -d -v "$(pwd)/db/:/typedb-all-linux/server/db/" -p "$ROCKS_PORT":1729 vaticle/typedb:"$ROCKS_VRSN"
+
 KEY_POT="key-pot"
-echo "#3.2 Set up $KEY_POT with $PG_SPACE_TIME"
+echo "#3.3 Set up $KEY_POT with $PG_SPACE_TIME"
 safe_stop_remove "$KEY_POT"
 docker run -d --name "$KEY_POT" \
   --net "$KEY_NET" \

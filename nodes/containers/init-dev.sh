@@ -19,6 +19,7 @@ smart_stop_remove "$SONARQUBE"
 if [ "$( docker container inspect "$SONARQUBE" 2> /dev/null )" == "[]" ]; then
   safe_stop_remove "$SONARQUBE"
   docker run -d --name "$SONARQUBE" \
+    --ulimit nofile=362144:362144 \
     --net "$KEY_NET" \
     -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
     -e SONARQUBE_JDBC_USERNAME=pgst \

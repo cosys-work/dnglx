@@ -18,6 +18,10 @@ export TIMESCALE_POSTGIS_VRSN="latest-pg12"
 export KEYCLOAK_PORT=8080
 export KEYCLOAK_VRSN="13"
 
+#E
+export ROCKS_PORT=1729
+export ROCKS_VRSN="latest"
+
 #Dev A
 export PORTAINER_PORT=9090
 export PORTAINER_API_PORT=8000
@@ -41,11 +45,14 @@ pull_aot() {
   docker pull bitnami/keycloak:"$KEYCLOAK_VRSN"
   # 5. [Decorated, Linked 0] Mini-deb for prox-e-g APIs (Ledgers, Dashboards, MACERs)
   docker pull bitnami/nginx:"$PROX_EG_NGINX_VRSN"
+  # 6. [Linked 0] For knowledge relations
+  docker pull vaticle/typedb:latest
   # Dev Env
   docker pull sonarqube:"$SONARQUBE_VRSN"
   docker pull sonarsource/sonar-scanner-cli:"$SONAR_SCANNER_VRSN"
 }
 
+# Pass pull-aot as a param to pull images ahead of time
 if [ "pull-aot" == "$1" ]; then
   pull_aot
 fi
